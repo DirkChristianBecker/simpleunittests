@@ -10,9 +10,12 @@ namespace SimpleUnitTests
     public class TestCaseAttribute : Attribute
     {
         public string Description { get; private set; }
-        public TestCaseAttribute() 
+        public bool Active { get; private set; }
+
+        public TestCaseAttribute(bool active = true) 
         {
             Description = string.Empty;
+            Active = active;
         }
 
         public TestCaseAttribute(string description) 

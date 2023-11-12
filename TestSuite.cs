@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Numerics;
+using System.Threading.Tasks;
 
 namespace SimpleUnitTests
 {
@@ -45,7 +46,8 @@ namespace SimpleUnitTests
                     continue;
                 }
 
-                if(m.GetCustomAttribute(typeof(TestCaseAttribute)) == null)
+                var attrib = m.GetCustomAttribute(typeof(TestCaseAttribute)) as TestCaseAttribute;
+                if (attrib == null || !attrib.Active)
                 {
                     continue;
                 }
@@ -214,6 +216,25 @@ namespace SimpleUnitTests
 
             var f = Path.GetFileName(file);
             throw new TestRunnerException(file, member, line, $"{expected} is equal to {actual}. In {f}:{member} line {line}. {comment}");
+        }
+
+        protected void AssertException<T>(Action act, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
+        {
+            TestAssertions++;
+            try
+            {
+                act.Invoke();
+                throw new TestRunnerException(file, member, line, $"Expected exception of type {typeof(T).Name} but the action did not throw an exception. In {file}:{member} line {line}. {comment}");
+            }
+            catch (Exception ex) 
+            {
+                if(ex.GetType() == typeof(T))
+                {
+                    return;
+                }
+
+                throw new TestRunnerException(file, member, line, $"Expected exception of type {typeof(T).Name} but got {ex.InnerException.GetType().Name}. In {file}:{member} line {line}. {comment}");
+            }
         }
     }
 }
