@@ -4,7 +4,7 @@ Implements simple unit tests for Godot.net. The project is kept very simple to e
 # Usage
 Download and put the entire directory inside your projects addons-folder and than activate it under Project settings -> Plugins.
 
-![Project settings](https://github.com/DirkChristianBecker/simpleunittests/tree/master/images/ProjectSettings.png)
+![Project settings](https://github.com/DirkChristianBecker/simpleunittests/tree/master/images/ProjectSettings.png?raw=true)
 
 
 To implement your own tests derrive from TestSuite and mark each method that is a test with the TestCase-Attribute. 
