@@ -2,8 +2,8 @@
 Implements unit tests for Godot.net. The project is kept very simple and small to encourage users to modify it to meet their needs.
 
 # Installation
-Create a new project and inside this project create a folder called 'addons' and clone this repository into the addons folder. 
-Under 'Project -> Tools -> C#' click 'Create C# Solution'.
+Create a new project and inside this project create a folder called 'addons'. Now clone this repository into the addons folder, then 
+under 'Project -> Tools -> C#' click 'Create C# Solution'.
 
 ![Project settings](images/CreateSolution.png)
 
@@ -11,7 +11,7 @@ Now you should have a 'Build'-Button in the upper right corner of the editor win
 
 ![Project settings](images/Build.png)
 
-Now we activate the plugin. Got to 'Project -> Project settings -> Plugins' and mark the plugin. 
+Now we activate the plugin. Go to 'Project -> Project settings -> Plugins' and mark the plugin. 
 
 ![Project settings](images/ProjectSettings.png)
 
@@ -21,7 +21,11 @@ After that the testrunner window should show up.
 
 ![Project settings](images/TestRunner.png)
 
-You can dock it anywhere in your project like any other editor window. 
+You can dock it anywhere in your project like any other editor window. If you click on 'Run' at this stage you should see the results from
+the examples.
+
+![Project settings](images/FirstRun.png)
+
 
 # Writing tests
 To implement your own tests derrive from TestSuite and mark each method that is a test with the TestCase-Attribute. 
