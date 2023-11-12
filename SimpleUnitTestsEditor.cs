@@ -74,23 +74,28 @@ public partial class SimpleUnitTestsEditor : EditorPlugin
     private void OnTestFinished(object sender, TestEvent e)
     {
         var text = string.Format("{0} finished with {1} tests.", e.TestSuite.Name, e.TestSuite.NoOfTests);
-        GD.Print(text);        
+        GD.Print(text);
     }
 
     private void OnTestSucceeded(object sender, TestMethodEvent e)
     {
         var item = CurrentTestSuite.CreateChild();
 
-        item.SetIcon(0, GetEditorIcon("ImportCheck"));
+        item.SetIcon(0, GetEditorIcon("StatusSuccess"));
         item.SetText(1, e.Method.Name);       
     }
 
-    private void OnTestFailed(object sender, TestMethodEvent e)
+    private void OnTestFailed(object sender, TestFailedEvent e)
     {
         var item = CurrentTestSuite.CreateChild();
 
-        item.SetIcon(0, GetEditorIcon("ImportFailed"));
+        item.SetIcon(0, GetEditorIcon("StatusError"));
         item.SetText(1, e.Method.Name);
+
+        var ex = e.Exception;
+        item = item.CreateChild();
+        item.SetIcon(0, GetEditorIcon("StatusError"));
+        item.SetText(1, string.Format($"In {ex.File} line {ex.Line}: {ex.Message}."));
     }
 
     private void OnTestRunnerFinished(object sender, EventArgs e) 

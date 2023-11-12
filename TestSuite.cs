@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
 using System.IO;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Numerics;
 
 namespace SimpleUnitTests
 {
@@ -21,12 +18,12 @@ namespace SimpleUnitTests
             Name = name;
         }
 
-        internal virtual void Setup()
+        public virtual void Setup()
         {
 
         }
 
-        internal virtual void TearDown()
+        public virtual void TearDown()
         {
 
         }
@@ -71,7 +68,7 @@ namespace SimpleUnitTests
             return r;
         }
 
-        protected void AssertEqual(int expected, int actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string menber = "", [CallerLineNumber] int line = 0)
+        protected void AssertEqual(int expected, int actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
         {
             TestAssertions++;
             if (expected == actual)
@@ -80,10 +77,46 @@ namespace SimpleUnitTests
             }
 
             var f = Path.GetFileName(file);
-            throw new NotEqualException($"{expected} is not equal to {actual}. In {f}:{menber} line {line}. \n {comment}");
+            throw new TestRunnerException(file, member, line, $"{expected} is not equal to {actual}. In {f}:{member} line {line}. {comment}");
         }
 
-        protected void AssertEqual(float expected, float actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string menber = "", [CallerLineNumber] int line = 0)
+        protected void AssertNotEqual(int expected, int actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
+        {
+            TestAssertions++;
+            if (expected != actual)
+            {
+                return;
+            }
+
+            var f = Path.GetFileName(file);
+            throw new TestRunnerException(file, member, line, $"{expected} is equal to {actual}. In {f}:{member} line {line}. {comment}");
+        }
+
+        protected void AssertEqual(bool expected, bool actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
+        {
+            TestAssertions++;
+            if (expected == actual)
+            {
+                return;
+            }
+
+            var f = Path.GetFileName(file);
+            throw new TestRunnerException(file, member, line, $"{expected} is not equal to {actual}. In {f}:{member} line {line}. {comment}");
+        }
+
+        protected void AssertNotEqual(bool expected, bool actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
+        {
+            TestAssertions++;
+            if (expected != actual)
+            {
+                return;
+            }
+
+            var f = Path.GetFileName(file);
+            throw new TestRunnerException(file, member, line, $"{expected} is equal to {actual}. In {f}:{member} line {line}. {comment}");
+        }
+
+        protected void AssertEqual(float expected, float actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
         {
             TestAssertions++;
             var diff = expected - actual;
@@ -93,23 +126,49 @@ namespace SimpleUnitTests
             }
 
             var f = Path.GetFileName(file);
-            throw new NotEqualException($"{expected} is not equal to {actual}. In {f}:{menber} line {line}. \n {comment}");
+            throw new TestRunnerException(file, member, line, $"{expected} is not equal to {actual}. In {f}:{member} line {line}. {comment}");
         }
 
-        protected void AssertEqual(double expected, double actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string menber = "", [CallerLineNumber] int line = 0)
+        protected void AssertNotEqual(float expected, float actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
         {
             TestAssertions++;
-            var diff = expected - actual; 
+            var diff = expected - actual;
+            if (Math.Abs(diff) >= double.Epsilon)
+            {
+                return;
+            }
+
+            var f = Path.GetFileName(file);
+            throw new TestRunnerException(file, member, line, $"{expected} is equal to {actual}. In {f}:{member} line {line}. {comment}");
+        }
+
+        protected void AssertEqual(double expected, double actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
+        {
+            TestAssertions++;
+            var diff = expected - actual;
             if (Math.Abs(diff) <= double.Epsilon)
             {
                 return;
             }
 
             var f = Path.GetFileName(file);
-            throw new NotEqualException($"{expected} is not equal to {actual}. In {f}:{menber} line {line}. \n {comment}");
+            throw new TestRunnerException(file, member, line, $"{expected} is not equal to {actual}. In {f}:{member} line {line}. {comment}");
         }
 
-        protected void AssertEqual(string expected, string actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string menber = "", [CallerLineNumber] int line = 0)
+        protected void AssertNotEqual(double expected, double actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
+        {
+            TestAssertions++;
+            var diff = expected - actual;
+            if (Math.Abs(diff) >= double.Epsilon)
+            {
+                return;
+            }
+
+            var f = Path.GetFileName(file);
+            throw new TestRunnerException(file, member, line, $"{expected} is equal to {actual}. In {f}:{member} line {line}. {comment}");
+        }
+
+        protected void AssertEqual(string expected, string actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
         {
             TestAssertions++;
             if (expected == actual)
@@ -118,10 +177,22 @@ namespace SimpleUnitTests
             }
 
             var f = Path.GetFileName(file);
-            throw new NotEqualException($"{expected} is not equal to {actual}. In {f}:{menber} line {line}. \n {comment}");
+            throw new TestRunnerException(file, member, line, $"{expected} is not equal to {actual}. In {f}:{member} line {line}. {comment}");
         }
 
-        protected void AssertEqual(bool expected, bool actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string menber = "", [CallerLineNumber] int line = 0)
+        protected void AssertNotEqual(string expected, string actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
+        {
+            TestAssertions++;
+            if (expected != actual)
+            {
+                return;
+            }
+
+            var f = Path.GetFileName(file);
+            throw new TestRunnerException(file, member, line, $"{expected} is equal to {actual}. In {f}:{member} line {line}. {comment}");
+        }
+
+        protected void AssertEqual<T>(T expected, T actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0) where T : class
         {
             TestAssertions++;
             if (expected == actual)
@@ -130,19 +201,19 @@ namespace SimpleUnitTests
             }
 
             var f = Path.GetFileName(file);
-            throw new NotEqualException($"{expected} is not equal to {actual}. In {f}:{menber} line {line}. \n {comment}");
+            throw new TestRunnerException(file, member, line, $"{expected} is not equal to {actual}. In {f}:{member} line {line}. {comment}");
         }
 
-        protected void AssertEqual<T>(T expected, T actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string menber = "", [CallerLineNumber] int line = 0) where T : class
+        protected void AssertNotEqual<T>(T expected, T actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0) where T : class
         {
             TestAssertions++;
-            if (expected == actual)
+            if (expected != actual)
             {
                 return;
             }
 
             var f = Path.GetFileName(file);
-            throw new NotEqualException($"{expected} is not equal to {actual}. In {f}:{menber} line {line}. \n {comment}");
+            throw new TestRunnerException(file, member, line, $"{expected} is equal to {actual}. In {f}:{member} line {line}. {comment}");
         }
     }
 }

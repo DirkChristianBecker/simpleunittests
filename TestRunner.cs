@@ -15,6 +15,12 @@ namespace SimpleUnitTests
         public MethodInfo Method { get; set; }
     }
 
+    public class TestFailedEvent : EventArgs
+    {
+        public MethodInfo Method { get; set; }
+        public TestRunnerException Exception { get; set; }
+    }
+
     public class TestRunner
     {
         protected List<TestSuite> Tests {  get; set; }
@@ -29,7 +35,7 @@ namespace SimpleUnitTests
         public event EventHandler<TestEvent> TestStarted;
         public event EventHandler<TestEvent> TestFinished;
         public event EventHandler<TestMethodEvent> TestSucceeded;
-        public event EventHandler<TestMethodEvent> TestFailed;
+        public event EventHandler<TestFailedEvent> TestFailed;
 
         public event EventHandler TestRunnerStarted;
         public event EventHandler TestRunnerFinished;
@@ -135,8 +141,18 @@ namespace SimpleUnitTests
                     Failures++;
                     if(TestFailed != null)
                     {
-                        var args = new TestMethodEvent();
+                        var args = new TestFailedEvent();
                         args.Method = method;
+
+                        if(e.InnerException.GetType() == typeof(TestRunnerException))
+                        {
+                            args.Exception = (TestRunnerException) e.InnerException;
+                        }
+                        else
+                        {
+                            args.Exception = new TestRunnerException("unknwon", "unknown", -1, e.Message);
+                        }
+
                         TestFailed.Invoke(this, args);
                     }
 
