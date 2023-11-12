@@ -1,4 +1,4 @@
-# simpleunittests
+# Simple Unit Tests for Godot.net
 Implements unit tests for Godot.net. The project is kept very simple and small to encourage users to modify it to meet their needs.
 
 # Installation
@@ -21,7 +21,7 @@ After that the testrunner window should show up.
 
 ![Project settings](images/TestRunner.png)
 
-You can dock anywhere in your project.
+You can dock it anywhere in your project like any other editor window. 
 
 # Writing tests
 To implement your own tests derrive from TestSuite and mark each method that is a test with the TestCase-Attribute. 
