@@ -170,6 +170,31 @@ namespace SimpleUnitTests
             throw new TestRunnerException(file, member, line, $"{expected} is equal to {actual}. In {f}:{member} line {line}. {comment}");
         }
 
+        protected void AssertEqual(Guid expected, Guid actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
+        {
+            TestAssertions++;
+            if (expected == actual)
+            {
+                return;
+            }
+
+            var f = Path.GetFileName(file);
+            throw new TestRunnerException(file, member, line, $"{expected} is not equal to {actual}. In {f}:{member} line {line}. {comment}");
+        }
+
+        protected void AssertNotEqual(Guid expected, Guid actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
+        {
+            TestAssertions++;
+            TestAssertions++;
+            if (expected != actual)
+            {
+                return;
+            }
+
+            var f = Path.GetFileName(file);
+            throw new TestRunnerException(file, member, line, $"{expected} is equal to {actual}. In {f}:{member} line {line}. {comment}");
+        }
+
         protected void AssertEqual(string expected, string actual, string comment = null, [CallerFilePath] string file = "", [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
         {
             TestAssertions++;
