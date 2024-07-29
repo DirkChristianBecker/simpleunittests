@@ -41,7 +41,7 @@ public partial class SimpleUnitTestsEditor : EditorPlugin
 
     private Texture2D GetEditorIcon(string name, string theme_name = "EditorIcons")
     {
-        var theme = GetEditorInterface().GetBaseControl().Theme;
+        var theme = EditorInterface.Singleton.GetBaseControl().Theme;
         var icon = theme.GetIcon(name, theme_name);
 
         return icon;
